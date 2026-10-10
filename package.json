@@ -1,0 +1,29 @@
+{
+  "name": "matayoshi-kobudo-study-group",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "api",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n storage,api,web \"npm run storage:start\" \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:web": "npm --workspace frontend run dev -- --host 127.0.0.1",
+    "dev:api": "func start --script-root api",
+    "storage:start": "azurite --silent --location .azurite --blobHost 127.0.0.1 --queueHost 127.0.0.1 --tableHost 127.0.0.1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:web": "vitest run frontend/src",
+    "test:api": "vitest run api/tests",
+    "build": "npm run build --workspace frontend && npm run build --workspace api"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vue/test-utils": "^2.4.6",
+    "azurite": "^3.35.0",
+    "concurrently": "^9.1.2",
+    "jsdom": "^26.1.0",
+    "vite": "^6.3.5",
+    "vitest": "^5.0.3"
+  }
+}

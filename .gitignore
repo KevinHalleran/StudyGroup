@@ -1,0 +1,8 @@
+node_modules/
+frontend/dist/
+api/dist/
+api/local.settings.json
+.azurite/
+.env
+.env.*
+!.env.example
