@@ -1,7 +1,25 @@
 {
+  "platform": {
+    "apiRuntime": "node:22"
+  },
+  "routes": [
+    { "route": "/api/health", "allowedRoles": ["anonymous"] },
+    { "route": "/api/admin/*", "allowedRoles": ["administrator"] },
+    { "route": "/admin/*", "allowedRoles": ["administrator"] },
+    { "route": "/api/*", "allowedRoles": ["authenticated"] },
+    { "route": "/login", "rewrite": "/.auth/login/aad" },
+    { "route": "/login/github", "rewrite": "/.auth/login/github" },
+    { "route": "/logout", "redirect": "/.auth/logout" }
+  ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/login",
+      "statusCode": 302
+    }
+  },
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*"]
+    "exclude": ["/assets/*", "/api/*", "/.auth/*"]
   },
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",

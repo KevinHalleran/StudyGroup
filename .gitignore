@@ -6,3 +6,5 @@ api/local.settings.json
 .env
 .env.*
 !.env.example
+
+.stage/

@@ -9,7 +9,7 @@
 
 
 * **Security, Privacy & Compliance**
-* Authentication leverages Azure Static Web Apps managed login with Google and Facebook federated providers.
+* Authentication leverages Azure Static Web Apps managed login with Microsoft and GitHub providers (Free tier; see DESIGN.md D14).
 * Role-Based Access Control (RBAC) separates standard student access from instructor/admin privileges.
 * Data privacy is maintained via an annual instructor prompt mechanism to expire, archive, or aggregate historical session records.
 

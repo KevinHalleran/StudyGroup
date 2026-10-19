@@ -4,12 +4,17 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'infra/**'
+      - '**/*.md'
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: azure-deploy-${{ github.ref }}
@@ -17,81 +22,100 @@ concurrency:
 
 jobs:
   validate:
-    name: Validate
+    name: Test and build
     runs-on: ubuntu-latest
     steps:
-      - name: Check out source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
       - name: Run unit tests
-        run: npm test
+        run: npm run test:unit
 
       - name: Build frontend and Functions API
         run: npm run build
 
-  deploy-frontend:
-    name: Deploy Static Web App
-    needs: validate
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  e2e:
+    name: End-to-end (local stack)
     runs-on: ubuntu-latest
     steps:
-      - name: Check out source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies and build frontend
-        run: |
-          npm ci
-          npm run build --workspace frontend
+      - run: npm ci
 
-      - name: Deploy Static Web App
+      - name: Install Azure Functions Core Tools
+        run: npm install --global azure-functions-core-tools@4 --unsafe-perm true
+
+      - name: Run end-to-end tests (Azurite + Functions host + Vite)
+        run: npm run test:e2e
+
+  deploy:
+    name: Deploy and health check
+    needs: [validate, e2e]
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' && vars.AZURE_CLIENT_ID != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build frontend and API
+        run: npm run build
+
+      # The API is staged outside the npm workspace so production dependencies install in isolation.
+      - name: Stage API
+        run: |
+          mkdir -p .stage/api
+          cp -r api/dist api/host.json api/package.json .stage/api/
+          cd .stage/api
+          npm install --omit=dev --no-package-lock --no-audit --no-fund
+
+      - name: Sign in to Azure (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Resolve Static Web App and deployment token
+        id: swa
+        run: |
+          rg="${{ vars.AZURE_RESOURCE_GROUP }}"
+          name="$(az staticwebapp list --resource-group "$rg" --query '[0].name' -o tsv)"
+          if [ -z "$name" ]; then echo "No Static Web App found; run the Infrastructure workflow first." >&2; exit 1; fi
+          host="$(az staticwebapp show --name "$name" --resource-group "$rg" --query defaultHostname -o tsv)"
+          token="$(az staticwebapp secrets list --name "$name" --resource-group "$rg" --query properties.apiKey -o tsv)"
+          echo "::add-mask::$token"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "host=$host" >> "$GITHUB_OUTPUT"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy Static Web App and managed Functions
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ steps.swa.outputs.token }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: frontend/dist
-          output_location: ""
+          api_location: .stage/api
+          output_location: ''
           skip_app_build: true
+          skip_api_build: true
 
-  deploy-functions:
-    name: Deploy Azure Functions
-    needs: validate
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out source
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies and build Functions API
-        run: |
-          npm ci
-          npm run build --workspace api
-
-      - name: Deploy Functions API
-        uses: Azure/functions-action@v1
-        with:
-          app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
-          package: api
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-          scm-do-build-during-deployment: true
+      - name: Post-deployment health check
+        run: bash scripts/health-check.sh "${{ steps.swa.outputs.host }}"

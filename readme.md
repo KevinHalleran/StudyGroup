@@ -1,6 +1,8 @@
 # Matayoshi Kobudo Study Group Platform
 
-A lightweight, pure Azure serverless application designed to maintain study group continuity while strictly enforcing dojo belt-rank constraints and curriculum boundaries. 
+A lightweight, pure Azure serverless application designed to maintain study group continuity while strictly enforcing curriculum boundaries based on each attendee's maximum class attended.
+
+> **Authoritative design and as-built record: [DESIGN.md](./DESIGN.md).** This README is a summary; where documents disagree, `DESIGN.md` wins.
 
 ---
 
@@ -23,11 +25,11 @@ The application is built using a modern, zero-cost (or free-tier) cloud architec
 
 ### Technology Stack
 * **Frontend Tier**: Vue.js Single Page Application hosted via **Azure Static Web Apps** (Free Tier).
-* **Compute Tier**: **Azure Functions** (Node.js runtime, Consumption Plan) serving API endpoints and AI orchestration.
+* **Compute Tier**: **Azure Functions** (Node.js 22, managed by Static Web Apps Free tier) serving API endpoints and AI orchestration.
 * **Data Tier**: 
-  * **Azure Table Storage**: Key-value store for user profiles, identity mappings, and verified Matayoshi Kobudo belt ranks.
+  * **Azure Table Storage**: Key-value store for user profiles, identity mappings, and each student's max class attended (`Year N, Class M`).
   * **Azure Blob Storage**: JSON document repository for session rosters, attendance logs, and archived study plans.
-* **Authentication**: Azure Static Web Apps managed authentication supporting federated **Google** and **Facebook** logins.
+* **Authentication**: Azure Static Web Apps managed authentication with **Microsoft** and **GitHub** sign-in (Free tier; Google/Facebook need Standard).
 
 ---
 
@@ -62,31 +64,36 @@ Requirements: Node.js 22 LTS, npm, and Azure Functions Core Tools v4.
    ```bash
    npm run test:web
    ```
-   The initial Module 1 rank-management tests are intentionally red until the feature is implemented:
+   The Module 1 tests (rank/max-class management) are intentionally red until implemented; see `DESIGN.md` section 4:
    ```bash
    npm run test:api
    ```
-   Run `npm test` for both suites and `npm run build` to build both workspaces.
+   Run `npm run test:unit` (alias `npm test`) for all unit tests and `npm run build` to build both workspaces.
+5. Run the end-to-end suite (starts Azurite, the Functions host and Vite, runs the tests, then stops everything; needs Azure Functions Core Tools v4):
+   ```bash
+   npm run test:e2e
+   ```
+
+**Test layers.** Unit tests (`api/tests/*.test.ts`, `frontend/src/*.test.js`) are pure: no network, no Azurite, no Functions host, and they run on demand with `npm run test:unit` (or `npm run test:unit:watch`). End-to-end tests (`e2e/*.e2e.test.ts`) exercise the running local stack. CI runs both; deploys require both to pass.
 
 `api/local.settings.json` is local-only and ignored by Git. Its checked-in template is
 `api/local.settings.example.json`; both use Azurite's development connection string.
 
+**Commit habit.** `npm install` enables a pre-commit hook (`.githooks/pre-commit`) that runs
+`npm run verify` (unit tests, build, local end-to-end) and rejects the commit if anything
+fails. Documentation-only commits skip it. Run `npm run verify` yourself any time. CI repeats
+the same checks, so a green local verify is the expected state of every commit.
+
 ## Deployment Pipeline
 
-`.github/workflows/azure-deploy.yml` validates changes on pull requests and deploys on
-pushes to `main` after tests and builds pass. Configure the repository variable
-`AZURE_FUNCTIONAPP_NAME` and secrets `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` and
-`AZURE_STATIC_WEB_APPS_API_TOKEN`. The workflow deploys to already-provisioned Azure
-resources; it does not provision them. Since the Module 1 API test is deliberately
-failing in this bootstrap, deployment remains blocked until its implementation makes
-the test pass.
-
-The API is deployed as a separate Function App. Static Web Apps managed authentication
-does not by itself enforce roles on that separate host; implement server-side identity
-and role validation for every API route (and configure the required CORS origin) before
-exposing API functionality.
+All Azure resources are Bicep (`infra/`) and managed only through GitHub Actions:
+`infra.yml` provisions and drift-checks them; `azure-deploy.yml` tests, deploys the
+Static Web App with its managed Functions API, and runs a health check. Authentication
+uses GitHub OIDC (no stored secrets). One-time setup: run `infra/bootstrap/bootstrap.ps1`,
+then the Infrastructure workflow. See [docs/MAINTENANCE.md](./docs/MAINTENANCE.md).
+Tests that are deliberately failing in this bootstrap block deployment until implemented.
 
 ---
 
 ## License & Compliance
-Maintained under dojo governance guidelines. All training material access is dynamically bounded by the lowest-grade attendee present on the active roster.
+Maintained under dojo governance guidelines. All training material is dynamically bounded by the least experienced attendee present (the lowest max class attended on the active roster).

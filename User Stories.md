@@ -2,11 +2,24 @@ Here is the structured array of user stories for your Matayoshi Kobudo study gro
 
 ---
 
-### Module 1: User & Rank Management (Admin)
+> **Authoritative design and as-built record: [DESIGN.md](./DESIGN.md).** "Rank" and "grade" in these stories mean *max class attended* (`Year N, Class M`, 1-52 classes per year). Where documents disagree, `DESIGN.md` wins.
+
+### Module 0: Platform Foundations
+
+* **US-0.1: Site Exists**
+* *As a* visitor, *I want to* navigate to the site and get a working page, *so that* we know the platform is up.
+* *Acceptance Criteria*: `GET /` returns HTTP 200 with the app shell; `GET /api/health` returns HTTP 200 with storage reachable. Verified locally by `npm run test:e2e` before every commit, and after each deployment by the post-deploy health check.
+
+### Module 1: User & Max Class Management (Admin)
+
+* **US-1.0: Instructor Roster Import**
+* *As an* Instructor, *I want to* upload my Excel roster (Student Name, Email Address, Max Class Attended), *so that* attendees and their content gates are loaded without retyping.
+* *Acceptance Criteria*: Rows are validated (email present and unique, max class valid); valid rows are upserted by email so re-imports are idempotent; the result lists each row's outcome so failed rows can be fixed and retried.
+
 
 * **US-1.1: Instructor User Profile Management**
-* *As an* Instructor, *I want to* view a list of all registered study group participants and update their verified Matayoshi Kobudo progress, *so that* the system enforces the correct ceiling.
-* *Acceptance Criteria*: Admin UI displays users stored in Azure Table Storage; instructor can edit a user's rank field; changes persist immediately.
+* *As an* Instructor, *I want to* view a list of all registered study group participants and update their max class attended, *so that* the system enforces the correct content gate.
+* *Acceptance Criteria*: Admin UI displays users stored in Azure Table Storage; instructor can edit a user's max class; invalid values are rejected; changes persist immediately.
 
 
 * **US-1.2: Student Self-Registration & Roster Opt-In**
@@ -41,7 +54,7 @@ Here is the structured array of user stories for your Matayoshi Kobudo study gro
 
 * **US-3.1: Automated Grade Floor Calculation**
 * *As the* System, *I want to* evaluate the active attendee roster against Azure Table Storage ranks upon check-in completion, *so that* it identifies the lowest grade present.
-* *Acceptance Criteria*: Azure Function reads the session roster, queries Table Storage for ranks, computes the minimum grade threshold, and appends the floor value to the session JSON document.
+* *Acceptance Criteria*: Azure Function reads the session roster, queries Table Storage for ranks, computes the minimum max-class ordinal (the floor), and appends the floor value to the session JSON document. The floor is computed server-side; an empty roster is an error.
 
 
 * **US-3.2: AI-Powered Study Plan Generation**

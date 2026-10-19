@@ -7,6 +7,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@azure/data-tables": "^13.3.2",
     "@azure/functions": "^4.7.2"
   },
   "devDependencies": {
