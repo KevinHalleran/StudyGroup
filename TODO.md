@@ -2,7 +2,7 @@
 
 Running next-steps list. Updated after every step. Detail and task IDs: [docs/backlog/](./docs/backlog/README.md). Design: [DESIGN.md](./DESIGN.md). Operations: [docs/MAINTENANCE.md](./docs/MAINTENANCE.md).
 
-_Last updated: 2026-10-19 (after US-0.1 site-exists, pre-commit gate, max-class implemented)._
+_Last updated: 2026-10-20 (shared class-summary and lesson-plan content schema documented)._
 
 **Current focus: get US-1.0 Instructor Roster Import into instructors' hands.** Full plan: [US-1.0 task list](./docs/backlog/US-1.0-roster-import.md) (28 tasks, 5 phases).
 
@@ -41,3 +41,4 @@ _Last updated: 2026-10-19 (after US-0.1 site-exists, pre-commit gate, max-class 
 - Backlog structure and US-1.0 task breakdown.
 - US-0.1 Site exists: local e2e proves / and /api/health return 200.
 - Pre-commit gate (npm run verify) enforced by .githooks; max-class implemented, rank stub removed; unit suite 27/27 green.
+- Shared structured content schema for class summaries and lesson plans documented in `curriculum/lesson-content.schema.json` and DESIGN.md.

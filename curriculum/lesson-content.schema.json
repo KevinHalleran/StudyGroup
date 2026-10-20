@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Structured curriculum content",
+  "description": "Shared weapon/activity/item content for class summaries and lesson plans. Vocabulary membership is validated separately against the instructor-owned curriculum vocabulary.",
+  "type": "object",
+  "properties": {
+    "weapons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/weapon"
+      }
+    }
+  },
+  "required": [
+    "weapons"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "weapon": {
+      "type": "object",
+      "properties": {
+        "weapon": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A weapon name, or a two-weapon pairing for kumite (for example, bo-sai)."
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/activity"
+          }
+        }
+      },
+      "required": [
+        "weapon",
+        "activities"
+      ],
+      "additionalProperties": false
+    },
+    "activity": {
+      "type": "object",
+      "properties": {
+        "activity": {
+          "enum": [
+            "kihon",
+            "kata",
+            "kumite"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/item"
+          }
+        }
+      },
+      "required": [
+        "activity",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "item": {
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coverage": {
+          "enum": [
+            "explicit",
+            "implicit"
+          ]
+        },
+        "focus": {
+          "const": true,
+          "description": "Present only when an instructor has called out this item for additional study or refinement."
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional short explanatory note."
+        }
+      },
+      "required": [
+        "item",
+        "coverage"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

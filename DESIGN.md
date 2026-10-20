@@ -30,6 +30,36 @@ Related documents (summaries and background): [readme.md](./readme.md), [Archite
 
 ---
 
+## 1.1 Curriculum content schema
+
+Class summaries and lesson plans share the structured content shape defined in [`curriculum/lesson-content.schema.json`](./curriculum/lesson-content.schema.json):
+
+```json
+{
+  "weapons": [
+    {
+      "weapon": "Bo",
+      "activities": [
+        {
+          "activity": "kihon",
+          "items": [
+            { "item": "Kihon 1", "coverage": "explicit" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+`activity` is `kihon`, `kata`, or `kumite`; `coverage` is `explicit` or `implicit`. An optional `focus: true` marks an instructor call-out, and `note` is optional. For kumite, `weapon` is the pairing (for example, `bo-sai`). The schema defines structure; allowed names and items are checked against the instructor-owned curriculum vocabulary, which is not yet formalized as JSON.
+
+Lesson plans add timing to this shared content shape. The exact timing placement and the surrounding class-summary/session record envelopes are not defined by this schema.
+
+The related token/cost optimizations are D25-D28 above: summarize each transcript once, keep plan input compact, cache plans by floor and template version, and meter AI use against the monthly cap. The task-level cost estimate is in [`docs/backlog/US-3.3-transcripts-and-lesson-plans.md`](./docs/backlog/US-3.3-transcripts-and-lesson-plans.md).
+
+---
+
 ## 2. Architecture
 
 ```text
