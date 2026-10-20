@@ -44,7 +44,7 @@ Sound: the "lowest grade bound" rule (`absoluteId <= min`) matches D7/D8, and on
 | US-3.3-T13 | Update DESIGN.md as-built, MAINTENANCE.md, privacy and retention notes | C | todo | T12 | Docs match what is deployed |
 | US-3.3-T14 | Token budget and metering: per-call token counts in `Operations`, US$5 monthly hard cap that blocks calls, Azure cost alert at 50% and 100% in Bicep (D28) | C | todo | T05, T06 | Unit tests green; cap blocks the next call |
 | US-3.3-T15 | Plan cache keyed by (floor ordinal, template version) in Blob (D27) | C | todo | T10 | Unit tests: second request for the same floor makes no AI call |
-| US-3.3-T16 | Convert `curriculum/lexicon.md` into `curriculum/vocabulary.json` (weapons, 35 kihon sets: Bo 15, Sai 10, Tonfa 10; kata; kumite = creator + pairing; activity categories incl. warm-up and history; Japanese/English glossary used to normalize spellings); schema, loader and validator unit tests | B | todo | T01 | Kevin confirms the file; validator tests green |
+| US-3.3-T16 | Convert `curriculum/lexicon.md` into `curriculum/vocabulary.json` (weapons, 35 kihon sets: Bo 15, Sai 10, Tonkuwa 10; kata; kumite = creator + pairing; activity categories incl. warm-up and history; Japanese/English glossary used to normalize spellings); schema, loader and validator unit tests | B | todo | T01 | Kevin confirms the file; validator tests green |
 | US-3.3-T17 | Review queue for tags not in the vocabulary (flag, do not invent); instructor approves or edits. Includes marking `focus` call-outs | C | todo | T08, T16 | E2E: unknown item is flagged, not indexed; focus items are preserved |
 
 ## Cost estimate (US-3.3, assumption-based)
@@ -69,7 +69,7 @@ Good: it is exactly the lexicon needed (descriptive words, activity categories, 
 1. **Spelling inconsistency**: `Tzuki` (word list) vs `Tsuki` (kihon rows); `Recieving`, `Categopries`, kata `Sakagaua`. Confirm canonical spellings (the AI will normalize transcript spellings to these).
 2. **Nunti** is listed as a weapon but has no kihon or kata. Is it used yet, or a placeholder?
 3. **Bo 4** English says "mid-level horizontal strike" but the Japanese is Gedan (low); Bo 3 and Bo 4 and Bo 15 rows are missing commas. Please confirm the English.
-4. **Tonfa 8** has 5 Japanese actions but 6 English ones ("arm strike, low level block, high level strike" vs three `Gedan Harai` plus `Jodan Uchi`). Confirm the intended sequence.
+4. **Tonkuwa 8** has 5 Japanese actions but 6 English ones ("arm strike, low level block, high level strike" vs three `Gedan Harai` plus `Jodan Uchi`). Confirm the intended sequence.
 5. **Kumite** lines read as "Creator + pairing" (`Kimo Wall Bo-Bo`, `Gakia Bo-Sai`). Confirm that `Kimo Wall` and `Gakia` are creators/styles and the pairing is the last word, and whether there are other kumite (e.g. numbered).
 6. **Categories** include `Warm-up` and `History`. The design only tagged kihon, kata and kumite; we will add warm-up and history as activity types (history carries no technique items).
 7. **Kata list**: no per-weapon numbering; fine for now. Nunchaku has kata only (no kihon set), as expected.

@@ -22,7 +22,7 @@ Kata
 # Weapons
 Bo
 Sai
-Tonfa
+Tonkuwa
 Nunti
 Nunchaku
 
@@ -53,22 +53,22 @@ Sai,	7,	Chudan Tsuki, Jodan Naname Uchi, Gedan Uke	middle level thrust, high lev
 Sai,	8,	Chudan Tsuki, Gedan Harai, Jodan Nuki, Gedan Uke	middle level thrust, low level sweeping block, high level piercing strike, low level block
 Sai,	9,	Chudan Tsuki, Gedan Harai, Gedan Harai, Kote Uchi, Gedan Uke	middle level thrust, low level sweeping block, low level sweeping block, forearm strike, low level block
 Sai,	10,	Chudan Tsuki, Gedan Harai, Mawashi Uke, Gedan Uke	middle level thrust, low level sweeping block, circular block, low level block
-Tonfa,	1,	Jodan Yoko Uchi	High level side strike
-Tonfa,	2,	Jodan Uke	high level block
-Tonfa,	3,	Chudan Tsuki	middle level thrust
-Tonfa,	4,	Chudan Nuki	middle level penetration
-Tonfa,	5,	Gedan Yoko Uchi	low level side strike
-Tonfa,	6,	Gedan Uke	low level block
-Tonfa,	7,	Ue Uchi, Jodan Uchi	chin strike, high level strike
-Tonfa,	8,	Chudan Tsuki, Gedan Harai, Kote Uchi, Gedan Uke, Jodan Uchi	middle level thrust, low level sweeping block, arm strike, low level block, high level strike
-Tonfa,	9,	Chudan Tsuki, Gedan Harai, Gedan Harai, Jodan Yokouchi, Jodan Uchi	middle level thrust, low level sweeping block, low level sweeping block, high level side strike, high level strike
-Tonfa,	10,	Chudan Tsuki, Nikaimawashi Uchi	middle level thrust, double circular strikes
+Tonkuwa,	1,	Jodan Yoko Uchi	High level side strike
+Tonkuwa,	2,	Jodan Uke	high level block
+Tonkuwa,	3,	Chudan Tsuki	middle level thrust
+Tonkuwa,	4,	Chudan Nuki	middle level penetration
+Tonkuwa,	5,	Gedan Yoko Uchi	low level side strike
+Tonkuwa,	6,	Gedan Uke	low level block
+Tonkuwa,	7,	Ue Uchi, Jodan Uchi	chin strike, high level strike
+Tonkuwa,	8,	Chudan Tsuki, Gedan Harai, Kote Uchi, Gedan Uke, Jodan Uchi	middle level thrust, low level sweeping block, arm strike, low level block, high level strike
+Tonkuwa,	9,	Chudan Tsuki, Gedan Harai, Gedan Harai, Jodan Yokouchi, Jodan Uchi	middle level thrust, low level sweeping block, low level sweeping block, high level side strike, high level strike
+Tonkuwa,	10,	Chudan Tsuki, Nikaimawashi Uchi	middle level thrust, double circular strikes
 
 # Kata
 Weapon, Kata
 Bo, Shushi nu Kun
 Sai, Nicho Sai
-Tonfa, Tonfa Dai Ichi
+Tonkuwa, Tonkuwa Dai Ichi
 Bo, Choun
 Nunchaku, Nunchaku nu Kun
 Bo, Sakugawa
@@ -79,14 +79,14 @@ Kimo Wall Bo-Bo
 Gakiya Bo-Bo
 Kimo Wall Bo-Sai
 Gakiya Bo-Sai
-Kimo Wall Bo-Tonfa
-Gakiya Bo-Tonfa
+Kimo Wall Bo-Tonkuwa
+Gakiya Bo-Tonkuwa
 
 # Notes
-* Kumite are named `<creator> <pairing>`: Kimo Wall and Gakiya are the creators; the pairing (Bo-Bo, Bo-Sai, Bo-Tonfa) is the last word. No other kumite have come up yet.
+* Kumite are named `<creator> <pairing>`: Kimo Wall and Gakiya are the creators; the pairing (Bo-Bo, Bo-Sai, Bo-Tonkuwa) is the last word. No other kumite have come up yet.
 * Nunti is a weapon introduced in Year 4, first taught as a Bo parallel with weapon-handling instruction (focus on the hooks). It has no kihon set or kata yet.
 * Nunchaku has a kata but no formal kihon set.
 * Warm-up and History are lesson categories that carry no technique items.
-* Spelling rule: where Japanese and Okinawan differ, use the Okinawan (for example Japanese "kon", Okinawan "kun").
+* Spelling rule: where Japanese and Okinawan differ, use the Okinawan, as preferred by Gakiya Sensei (for example "nu Kun" rather than "no Kun", and **Tonkuwa** rather than Tonfa). The corrections map normalizes the Japanese or mis-heard forms (Tonfa, Tonpa and so on) to the Okinawan one.
 * Spellings confirmed by Kevin (2026-10-20): Sakugawa, Gakiya, Go-ren-da. Kata named with the "of" particle use the Okinawan "nu Kun" (Shushi nu Kun, Choun nu Kun, Sakugawa nu Kun, Nunchaku nu Kun); the lexicon lists the short names (Choun, Sakugawa) where that is how they are written.
 * Remaining items from Copilot's corrections are pending Kevin's review: see the lexicon review list in TODO.md.

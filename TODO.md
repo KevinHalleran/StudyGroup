@@ -15,9 +15,9 @@ _Last updated: 2026-10-20 (sessions, registration and Zoom design added)._
 - [ ] **US-3.3-T01 / T16** Review my lexicon fixes in `curriculum/lexicon.md` (answers applied) and confirm:
   - Typos: "Recieving" → Receiving; "Categopries" → Categories; "Sakagaua" → Sakugawa; Tzuki → Tsuki (matches `transcript-corrections.json`).
   - Bo 3, 4, 15: added missing commas; Bo 4 English "mid-level" → "low-level" (Gedan).
-  - Tonfa 8: removed the duplicate Gedan Harai (and its English); I also replaced the stray 3rd "Gedan Harai" with **Kote Uchi** to match the English "arm strike", **please verify**.
+  - Tonkuwa 8: removed the duplicate Gedan Harai (and its English); I also replaced the stray 3rd "Gedan Harai" with **Kote Uchi** to match the English "arm strike", **please verify**.
   - Added Notes: kumite naming (creator + pairing), Nunti (Year 4, bo parallel), Nunchaku (kata, no kihon), Warm-up/History categories.
-  - ~~Spelling conflicts~~ **decided 2026-10-20** and applied to the lexicon and corrections map: Sakugawa, Gakiya, Go-ren-da, and "nu Kun" for kata named with the particle (Shushi, Choun, Sakugawa, Nunchaku nu Kun); Okinawan spelling wins where Japanese differs.
+  - ~~Spelling conflicts~~ **decided 2026-10-20** and applied to the lexicon and corrections map: Sakugawa, Gakiya, Go-ren-da, and "nu Kun" for kata named with the particle (Shushi, Choun, Sakugawa, Nunchaku nu Kun); Okinawan spelling wins where Japanese differs (Gakiya Sensei's preference), so Tonkuwa replaces Tonfa everywhere. **Please send any other Okinawan terms to adopt** (for example for Bo, Sai, Nunti, kihon or kumite words) and I will apply them.
   - Optional: one real transcript sample with names removed.
 - [ ] **US-1.0-T13** Confirm the Excel handling limits (proposal: `.xlsx` only, max 1 MB, max 500 rows).
 - [ ] **US-2-T10 / T01 / T02** (not blocking): confirm the proposed email sender (Azure Communication Services Email) and sending domain; later, ask the instructor to create the Zoom Server-to-Server OAuth app and confirm the plan allows class-length meetings.
