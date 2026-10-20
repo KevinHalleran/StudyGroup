@@ -37,16 +37,20 @@ Here is the structured array of user stories for your Matayoshi Kobudo study gro
 
 * **US-2.1: Session Creation**
 * *As a* Moderator, *I want to* schedule an upcoming study group session, *so that* attendees can check in.
-* *Acceptance Criteria*: Moderator creates a session entry that generates a corresponding JSON document template stored in Azure Blob Storage.
+* *Acceptance Criteria*: Moderator creates a session entry that generates a corresponding JSON document template stored in Azure Blob Storage. Creating the session also creates the Zoom meeting through Zoom's API under the shared host account (US-2.3). If Zoom is unavailable the session is still saved, shown as "Zoom link pending", and the meeting creation is retried (never duplicated).
 
 
 * **US-2.2: Attendee Check-In & Roster Lock**
 * *As a* Student or Moderator, *I want to* check off attendees for the current session, *so that* the system knows who is present on the floor.
 * *Acceptance Criteria*: Vue frontend lets users check-in; updates the session JSON document in Blob Storage with the active attendee array.
 
-* US-2.3: Automated Zoom Link Provisioning **
-* *As a* Student, *I want to receive the active Zoom meeting join link upon checking in or registering for a study group session, *so that* I can seamlessly join the virtual floor if training remotely.
-* Acceptance Criteria: Azure Function successfully queries Zoom's API, attaches the join_url to the response payload with a visual loading spinner on the frontend, and gracefully handles network timeouts via the step-level retry queue.
+* **US-2.3: Automated Zoom Meeting Provisioning**
+* *As a* Moderator, *I want* the system to create the Zoom meeting when I create a session, *so that* I do not have to set up and paste a link by hand.
+* *Acceptance Criteria*: Azure Function calls Zoom's API to create one meeting under the single shared host account and stores the meeting ID, join URL and passcode on the session. Creation is idempotent (a retry never makes a second meeting), a Zoom failure or timeout leaves the session saved with a visible pending/failed state, and the moderator can retry. Editing or cancelling the session updates or deletes the Zoom meeting. Until the Zoom credentials exist, a stub Zoom client stands in (D30).
+
+* **US-2.4: Session Registration and Zoom Link Delivery**
+* *As a* Student, *I want to* register for an upcoming session and receive its Zoom join link, *so that* I can join the virtual floor if training remotely.
+* *Acceptance Criteria*: Registration is limited to signed-in, approved students and is idempotent per student and session. The response (and the registered-session view, with a loading spinner) shows the join URL and passcode, and the same link is emailed to the student. If the Zoom link is still pending, registration succeeds and the link is delivered as soon as it exists. The link is never returned to anyone who is not registered.
 
 ---
 

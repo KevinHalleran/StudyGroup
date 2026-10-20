@@ -2,7 +2,7 @@
 
 Running next-steps list. Updated after every step. Detail and task IDs: [docs/backlog/](./docs/backlog/README.md). Design: [DESIGN.md](./DESIGN.md). Operations: [docs/MAINTENANCE.md](./docs/MAINTENANCE.md).
 
-_Last updated: 2026-10-20 (shared class-summary and lesson-plan content schema documented)._
+_Last updated: 2026-10-20 (sessions, registration and Zoom design added)._
 
 **Current focus: get US-1.0 Instructor Roster Import into instructors' hands.** Full plan: [US-1.0 task list](./docs/backlog/US-1.0-roster-import.md) (28 tasks, 5 phases).
 
@@ -13,13 +13,14 @@ _Last updated: 2026-10-20 (shared class-summary and lesson-plan content schema d
 - [ ] **US-1.0-T05** Run the "Infrastructure" workflow from the GitHub Actions tab.
 - [ ] **US-1.0-T07** Decide the first-administrator approach (proposal: instructor emails in a Bicep parameter, no portal step) and send me the instructor email addresses to seed.
 - [ ] **US-3.3-T01 / T16** Review my lexicon fixes in `curriculum/lexicon.md` (answers applied) and confirm:
-  - Typos: "Recieving" → Receiving; "Categopries" → Categories; "Sakagaua" → Sakagawa; Tzuki → Tsuki (matches `transcript-corrections.json`).
+  - Typos: "Recieving" → Receiving; "Categopries" → Categories; "Sakagaua" → Sakugawa; Tzuki → Tsuki (matches `transcript-corrections.json`).
   - Bo 3, 4, 15: added missing commas; Bo 4 English "mid-level" → "low-level" (Gedan).
   - Tonfa 8: removed the duplicate Gedan Harai (and its English); I also replaced the stray 3rd "Gedan Harai" with **Kote Uchi** to match the English "arm strike", **please verify**.
   - Added Notes: kumite naming (creator + pairing), Nunti (Year 4, bo parallel), Nunchaku (kata, no kihon), Warm-up/History categories.
-  - **Decide spelling conflicts**: Sakagawa (you) vs Sakugawa (corrections map); Gakia (lexicon.md) vs Gakiya (map); Gorenda vs Go-ren-da; Nunchaku no Kun vs no Kata.
+  - ~~Spelling conflicts~~ **decided 2026-10-20** and applied to the lexicon and corrections map: Sakugawa, Gakiya, Go-ren-da, and "nu Kun" for kata named with the particle (Shushi, Choun, Sakugawa, Nunchaku nu Kun); Okinawan spelling wins where Japanese differs.
   - Optional: one real transcript sample with names removed.
 - [ ] **US-1.0-T13** Confirm the Excel handling limits (proposal: `.xlsx` only, max 1 MB, max 500 rows).
+- [ ] **US-2-T10 / T01 / T02** (not blocking): confirm the proposed email sender (Azure Communication Services Email) and sending domain; later, ask the instructor to create the Zoom Server-to-Server OAuth app and confirm the plan allows class-length meetings.
 
 ## 2. Next most important thing to do together
 
@@ -33,7 +34,7 @@ _Last updated: 2026-10-20 (shared class-summary and lesson-plan content schema d
 - US-1.1 Instructor edits a user's max class (reuses the Students repository from T16).
 - Identities linking for GitHub sign-in (D12).
 - Session blob JSON schema, roster snapshots, curriculum catalog.
-- Zoom join link on check-in/registration (US-2.3, D13).
+- Sessions, registration and Zoom (US-2.1, US-2.3, US-2.4; D30-D35): see the [US-2 plan](./docs/backlog/US-2-sessions-registration-zoom.md). Zoom is stubbed until the instructor supplies API credentials; email sender still to choose.
 - AI service choice, Bicep provisioning, lesson-plan generation gated by the floor ordinal (D17). **Reviewed**: see [US-3.3 plan](./docs/backlog/US-3.3-transcripts-and-lesson-plans.md) (13 tasks, decisions D18-D24 awaiting Kevin).
 - Annual archive/expiry prompt as a scheduled GitHub Action plus admin-only API (D16).
 - Azure budget/cost alert in Bicep.
@@ -49,3 +50,4 @@ _Last updated: 2026-10-20 (shared class-summary and lesson-plan content schema d
 - US-0.1 Site exists: local e2e proves / and /api/health return 200.
 - Pre-commit gate (npm run verify) enforced by .githooks; max-class implemented, rank stub removed; unit suite 27/27 green.
 - Shared structured content schema for class summaries and lesson plans documented in `curriculum/lesson-content.schema.json` and DESIGN.md.
+- Sessions, registration and Zoom design: stories US-2.1/2.3/2.4, decisions D30-D35, DESIGN.md 3.6 and the US-2 backlog (15 tasks).

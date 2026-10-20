@@ -38,7 +38,13 @@ Related documents (summaries and background): [readme.md](./readme.md), [Archite
 | D22 | Class summaries live in a Table Storage `ClassSummaries` table, one row per class (zero-padded ordinal), not one shared JSON blob. | **Proposed** |
 | D23 | Transcripts are private, covered by the annual archive prompt (D16); logs never contain transcript text. Azure OpenAI data-handling terms to be confirmed. | **Proposed** |
 | D24 | Lesson plans and class summaries use one **structured, controlled-vocabulary** shape: `weapon -> activity (kihon, kata, kumite) -> items`, instead of free text (see D29). | **Proposed** |
-| D13 | User Stories now include US-2.3 (Zoom join link on check-in/registration). Where the link is stored and how it is delivered is not yet designed. | **Open** |
+| D13 | Zoom join link delivery: resolved by D30-D35 (see section 3.6). | **Superseded** |
+| D30 | Zoom integration uses a **Server-to-Server OAuth** app (JWT apps are retired) behind a thin `ZoomClient` interface. Until the instructor supplies credentials, a **stub client** (deterministic fake meeting ID and join URL, no network) is the default; the real client is selected only when Zoom settings are present. | **Decided** (Kevin: stub for now) |
+| D31 | **One shared host account** (the instructor's Zoom account) owns every meeting. The moderator who schedules a session is not the Zoom host. | **Decided** (Kevin) |
+| D32 | Session creation never fails because Zoom is down: the session is saved with `zoom.status = pending`, the meeting is created in a retryable step, and success sets `created`, exhausted retries set `failed` (moderator can retry). Idempotency: if the session already holds a `meetingId`, no new meeting is created. | **Proposed** |
+| D33 | Registration is a distinct step from check-in (US-2.4 vs US-2.2). Registrations are one row per student per session in a `Registrations` table. Only a registered, approved student receives the join URL and passcode; it is never placed in public listings, logs or the session list. | **Proposed** |
+| D34 | The join link is delivered **both** in the app (registration response and registered-session view) and by **email**. Email uses an Azure-based sender, proposed **Azure Communication Services Email** (pay per use, provisioned in Bicep). Email is sent from a queued, idempotent step so a failure never loses the registration, and the app view is always available as the fallback. The sender and domain are not yet chosen. | **Proposed** (email service open) |
+| D35 | Zoom credentials (`ZOOM_ACCOUNT_ID`, `ZOOM_CLIENT_ID`, `ZOOM_CLIENT_SECRET`, host user ID) are the first stored secrets. Held as Key Vault references or secure Bicep parameters supplied from a GitHub secret; never in the repo. Meetings use a passcode and a waiting room. Session times are stored in UTC with the IANA time zone name. Old meeting references are covered by the annual archive prompt (D16). | **Proposed** |
 
 ---
 
@@ -124,7 +130,7 @@ Validation rules (implemented by `parseMaxClass`):
 
 ### 3.3 Session document (Blob)
 
-One blob per session, e.g. `sessions/session-YYYY-MM-DD.json`. It holds the session title, the attendee emails, a **snapshot** of each attendee's max class at check-in (so past sessions stay auditable if levels change later), the computed `floor`, and the generated plan. The annual instructor prompt archives, aggregates, or expires these blobs and the related student data. The exact JSON schema is not yet defined.
+One blob per session, e.g. `sessions/session-YYYY-MM-DD.json`. It holds the session title, the attendee emails, a **snapshot** of each attendee's max class at check-in (so past sessions stay auditable if levels change later), the computed `floor`, and the generated plan. The annual instructor prompt archives, aggregates, or expires these blobs and the related student data. The exact JSON schema is not yet defined, except for the Zoom part below.
 
 ### 3.4 Excel import (instructor only)
 
@@ -137,11 +143,43 @@ One blob per session, e.g. `sessions/session-YYYY-MM-DD.json`. It holds the sess
 
 At check-in close, the Function reads the attendees' rows and sets `floor = min(maxLessonOrdinal)`, writes it to the session blob, and passes it to the AI prompt as "include content up to and including Year Y, Class C". Class 1 is the lowest possible floor. A curriculum catalog (topics per Year/Class) is required for the plan engine and does not yet exist.
 
+### 3.6 Sessions, registration and Zoom (proposed, D30-D35)
+
+Session blob additions:
+
+```json
+{
+  "zoom": {
+    "status": "pending | created | failed",
+    "meetingId": "...",
+    "joinUrl": "...",
+    "passcode": "...",
+    "attempts": 0,
+    "lastError": "..."
+  },
+  "startUtc": "2026-11-07T14:00:00Z",
+  "timeZone": "America/New_York"
+}
+```
+
+`Registrations` table: `PartitionKey = sessionId`, `RowKey = student email`, plus `registeredAt` and `emailStatus` (`pending | sent | failed`).
+
+Flow:
+
+1. `POST /api/sessions` (moderator): validate, save the session with `zoom.status = pending`, then run the create-meeting step through `ZoomClient`. Success stores the meeting and sets `created`; failure leaves `pending` for retry (D32). A moderator-only retry endpoint re-runs the step.
+2. `POST /api/sessions/{id}/register` (approved student): upsert the registration, return the link if `created`, otherwise a "link pending" response. The email step is queued and idempotent (D34).
+3. When a pending meeting is later created, the link is emailed to students already registered.
+4. Session edit or cancel updates or deletes the Zoom meeting.
+
+Code layout (test-first, injected dependencies): `api/src/zoom.ts` (`ZoomClient` interface, stub client, real client with token cache, timeout and retry), `api/src/sessions.ts` (create, retry, edit, cancel) and `api/src/registrations.ts` (register, link delivery, email step).
+
+Background retries and email sending cannot run on SWA managed Functions (D14, D19), so they use the same worker Function App and queue as US-3.3 (D19). Until the worker exists, the first version retries inline once and relies on the moderator retry button.
+
 ---
 
 ## 4. As-Built Status
 
-Last updated: 2026-10-19.
+Last updated: 2026-10-20.
 
 | Area | State |
 |------|-------|
@@ -165,5 +203,6 @@ Last updated: 2026-10-19.
 2. Replace the rank-update test and stub with an administrator-only "update max class" operation.
 3. Write failing tests, then implement, the Excel import validation and idempotent upsert.
 4. Implement the D11 roles function and D12 identity linking.
-5. Define the session blob JSON schema and the curriculum catalog.
+5. Define the session blob JSON schema (Zoom part proposed in 3.6) and the curriculum catalog.
 6. Run the bootstrap, deploy the infrastructure, and choose and add the AI service (D17).
+7. Sessions, registration and Zoom (US-2.1, US-2.3, US-2.4): see the [US-2 backlog](./docs/backlog/US-2-sessions-registration-zoom.md); start with the stub `ZoomClient`.

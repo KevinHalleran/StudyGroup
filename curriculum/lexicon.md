@@ -42,7 +42,7 @@ Bo,	11,	Gedan Yoko Uke	Low level side block
 Bo,	12,	Jodan Naname Uchi (long grip), Nuki-bo	long high level diagonal strike, piercing thrust
 Bo,	13,	Chudan Nagashi Uchi, Gedan Yoko Uke	Middle-level flowing strike, Low-level side block
 Bo,	14,	Gedan Yoko Uke, Osae	Low level side block. Pressing
-Bo,	15,	Gorenda,	Five Linked Strikes
+Bo,	15,	Go-ren-da,	Five Linked Strikes
 Sai,	1,	Jodan Naname Uchi 	high level diagonal strike
 Sai,	2,	Jodan Uke	High Level block
 Sai,	3,	Chudan Tsuki 	middle level thrust
@@ -66,25 +66,27 @@ Tonfa,	10,	Chudan Tsuki, Nikaimawashi Uchi	middle level thrust, double circular 
 
 # Kata
 Weapon, Kata
-Bo, Shushi no Kun
+Bo, Shushi nu Kun
 Sai, Nicho Sai
 Tonfa, Tonfa Dai Ichi
 Bo, Choun
-Nunchaku, Nunchaku no Kun
-Bo, Sakagawa
+Nunchaku, Nunchaku nu Kun
+Bo, Sakugawa
 
 # Kumite
 Creator Weapons
 Kimo Wall Bo-Bo
-Gakia Bo-Bo
+Gakiya Bo-Bo
 Kimo Wall Bo-Sai
-Gakia Bo-Sai
+Gakiya Bo-Sai
 Kimo Wall Bo-Tonfa
-Gakia Bo-Tonfa
+Gakiya Bo-Tonfa
 
 # Notes
-* Kumite are named `<creator> <pairing>`: Kimo Wall and Gakia are the creators; the pairing (Bo-Bo, Bo-Sai, Bo-Tonfa) is the last word. No other kumite have come up yet.
+* Kumite are named `<creator> <pairing>`: Kimo Wall and Gakiya are the creators; the pairing (Bo-Bo, Bo-Sai, Bo-Tonfa) is the last word. No other kumite have come up yet.
 * Nunti is a weapon introduced in Year 4, first taught as a Bo parallel with weapon-handling instruction (focus on the hooks). It has no kihon set or kata yet.
 * Nunchaku has a kata but no formal kihon set.
 * Warm-up and History are lesson categories that carry no technique items.
-* Corrected by Copilot and pending Kevin's review: see the lexicon review list in TODO.md.
+* Spelling rule: where Japanese and Okinawan differ, use the Okinawan (for example Japanese "kon", Okinawan "kun").
+* Spellings confirmed by Kevin (2026-10-20): Sakugawa, Gakiya, Go-ren-da. Kata named with the "of" particle use the Okinawan "nu Kun" (Shushi nu Kun, Choun nu Kun, Sakugawa nu Kun, Nunchaku nu Kun); the lexicon lists the short names (Choun, Sakugawa) where that is how they are written.
+* Remaining items from Copilot's corrections are pending Kevin's review: see the lexicon review list in TODO.md.
