@@ -40,8 +40,12 @@ foreach ($provider in 'Microsoft.Web', 'Microsoft.Storage', 'Microsoft.Insights'
   Invoke-Az provider register --namespace $provider | Out-Null
 }
 
-Write-Host "Ensuring resource group $ResourceGroup in $Location..."
-Invoke-Az group create --name $ResourceGroup --location $Location --tags application=matayoshi-kobudo-study-group managedBy=bicep-github-actions | Out-Null
+Write-Host "Ensuring resource group $ResourceGroup..."
+# An existing group is used as-is (its location and tags are not changed).
+$groupExists = Invoke-Az group exists --name $ResourceGroup
+if ($groupExists -ne 'true') {
+  Invoke-Az group create --name $ResourceGroup --location $Location --tags application=matayoshi-kobudo-study-group managedBy=bicep-github-actions | Out-Null
+}
 $rgId = Invoke-Az group show --name $ResourceGroup --query id -o tsv
 
 Write-Host "Ensuring app registration $AppName..."

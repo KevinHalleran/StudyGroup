@@ -1,0 +1,8 @@
+{
+  "$comment": "Date of Class 1 for each course year (DESIGN.md D18). The class year is the latest entry on or before the class date. Add a new entry when a new year starts.",
+  "years": [
+    { "year": 1, "class1Date": "2023-01-21" },
+    { "year": 2, "class1Date": "2024-06-22" },
+    { "year": 3, "class1Date": "2025-07-26" }
+  ]
+}
